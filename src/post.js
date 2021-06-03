@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import './Post.css';
+import React , {useState ,useEffect} from 'react';
+import './post.css';
 import Avatar from "@material-ui/core/Avatar";
-import {db } from './firebase';
+import {db } from './FireBase.js';
 import firebase from 'firebase';
 
-
-function Post({postId, user, username, caption, imageUrl}) {
-    const[comments, setComments] = useState([]);
-    const[comment, setComment] = useState('');
-
+function Post({postId,user,username,caption,imgUrl}) {
+    const [comments, setComments] = useState([]);
+    const [comment, setComment] = useState('');
     useEffect(() => {
         let unsubscribe;
         if(postId){
@@ -25,45 +23,28 @@ function Post({postId, user, username, caption, imageUrl}) {
             unsubscribe();
         }
     }, [postId]);
-
+    
     const postComment = (event) =>{
         event.preventDefault();
-        db
-        .collection("posts")
-        .doc(postId)
-        .collection("comments")
-        .add({
+        db.collection("posts").doc(postId).collection("comments").add({
             text: comment,
             username: user.displayName,
             timestamp: firebase.firestore.FieldValue.serverTimestamp() 
         });
         setComment('');
-
-    };
+    }
 
     return (
-        <div className='post'>
+        <div className="post">
             <div className="post__header">
-            <Avatar
-             className='post__avatar'
-             alt='cde'
-             src="static/images/avatar/1.jpg"
-            />
-            
-            {/*header ->avatar + username*/}
-            <h3>{ username }</h3>
+                <Avatar className="post__avatar"
+                src="/static/images/avatar/jpg"
+                alt={username}/>
+                <h3>{username}</h3>
             </div>
-            {/*header ->avatar + username*/}
-
-            {/* image */}
-              <img className='post__image' alt = 'pic' src={ imageUrl }></img>
-            {/* image */}
-
-            {/* username + caption */}
-             <h4 className='post__text'> <strong>{ username } </strong> { caption }</h4>
-            {/* username + caption */}
             
-
+            <img className="post__image" alt="abc" src={imgUrl}></img>           
+            <h4 className="post__text"><strong>{username}:</strong> {caption}</h4>
             <div className = "post__comments">
                 {
                     comments.map((comment) => (
@@ -75,7 +56,7 @@ function Post({postId, user, username, caption, imageUrl}) {
             </div>
             {user && (
 
-                <form className = "post__commentBox">
+                <form className = "post__commentsBox">
                     <input 
                         className="post__input"
                         type="text"
@@ -91,11 +72,9 @@ function Post({postId, user, username, caption, imageUrl}) {
                     </button>
                     
                 </form>
-            )
-           }
-             
+            )}    
         </div>
     )
 }
 
-export default Post
+export default Post;
